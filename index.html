@@ -993,6 +993,7 @@ footer p { font-size: 0.78rem; color: #7A5C40; font-weight: 300; }
       muted
       loop
       playsinline
+      webkit-playsinline
       preload="auto"
       style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;">
       <source src="video.mp4" type="video/mp4">
@@ -1584,10 +1585,15 @@ footer p { font-size: 0.78rem; color: #7A5C40; font-weight: 300; }
   }
   // Tentar imediatamente ao carregar
   document.addEventListener('DOMContentLoaded', function() {
-    playVideo(document.querySelector('.hero-video-wrap video'));
-    playVideo(document.getElementById('dif-video'));
+    var hero = document.querySelector('.hero-video-wrap video');
+    var dif = document.getElementById('dif-video');
+    playVideo(hero);
+    playVideo(dif);
+    // Também tenta quando o video estiver pronto
+    if (hero) hero.addEventListener('canplay', function() { playVideo(hero); });
+    if (dif) dif.addEventListener('canplay', function() { playVideo(dif); });
   });
-  // E também no primeiro toque (iOS exige gesto do usuário em alguns casos)
+  // E também no primeiro toque (iOS/Android exigem gesto do usuário em alguns casos)
   ['touchstart','touchend','click'].forEach(function(ev) {
     document.addEventListener(ev, unlockVideos, { passive: true });
   });
