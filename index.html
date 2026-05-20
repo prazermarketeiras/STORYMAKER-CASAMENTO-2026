@@ -994,6 +994,8 @@ footer p { font-size: 0.78rem; color: #7A5C40; font-weight: 300; }
       loop
       playsinline
       webkit-playsinline
+      x5-playsinline
+      x5-video-player-type="h5"
       preload="auto"
       style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;">
       <source src="video.mp4" type="video/mp4">
@@ -1202,7 +1204,7 @@ footer p { font-size: 0.78rem; color: #7A5C40; font-weight: 300; }
 
     <!-- Centro — vídeo vertical -->
     <div class="dif-video-wrap">
-      <video id="dif-video" autoplay muted loop playsinline preload="auto">
+      <video id="dif-video" autoplay muted loop playsinline webkit-playsinline x5-playsinline x5-video-player-type="h5" preload="auto">
         <source src="video.mp4" type="video/mp4">
       </video>
     </div>
@@ -1519,24 +1521,29 @@ footer p { font-size: 0.78rem; color: #7A5C40; font-weight: 300; }
 </script>
 
 <script>
-// Forçar play no vídeo do diferencial quando entrar na tela
+// IntersectionObserver para videos quando entrarem na tela
 (function() {
   document.addEventListener('DOMContentLoaded', function() {
-    var difVideo = document.getElementById('dif-video');
-    if (!difVideo) return;
-    // Tentar play imediato
-    difVideo.play().catch(function() {});
-    // IntersectionObserver para garantir quando scrollar
-    var vidObserver = new IntersectionObserver(function(entries) {
-      entries.forEach(function(entry) {
-        if (entry.isIntersecting) {
-          entry.target.play().catch(function() {});
-        } else {
-          entry.target.pause();
-        }
-      });
-    }, { threshold: 0.1 });
-    vidObserver.observe(difVideo);
+    function observeVideo(v) {
+      if (!v) return;
+      var obs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            var vid = entry.target;
+            vid.muted = true;
+            if (vid.paused) {
+              vid.load();
+              vid.play().catch(function() {});
+            }
+          } else {
+            entry.target.pause();
+          }
+        });
+      }, { threshold: 0.1 });
+      obs.observe(v);
+    }
+    observeVideo(document.getElementById('dif-video'));
+    observeVideo(document.querySelector('.hero-video-wrap video'));
   });
 })();
 </script>
@@ -1560,42 +1567,43 @@ footer p { font-size: 0.78rem; color: #7A5C40; font-weight: 300; }
 </script>
 
 <script>
-// Desbloqueio de autoplay no iOS Safari
+// Autoplay robusto para mobile (iOS Safari, Android Chrome, WeChat)
 (function() {
-  var unlocked = false;
   function playVideo(v) {
     if (!v) return;
     v.muted = true;
     v.playsInline = true;
     v.setAttribute('playsinline', '');
     v.setAttribute('webkit-playsinline', '');
-    if (v.paused) {
-      var p = v.play();
-      if (p && p.catch) p.catch(function() {});
-    }
+    v.setAttribute('x5-playsinline', '');
+    v.load();
+    var p = v.play();
+    if (p && p.catch) p.catch(function() {});
   }
-  function unlockVideos() {
-    if (unlocked) return;
-    unlocked = true;
+
+  function playAll() {
     playVideo(document.querySelector('.hero-video-wrap video'));
     playVideo(document.getElementById('dif-video'));
-    ['touchstart','touchend','click'].forEach(function(ev) {
-      document.removeEventListener(ev, unlockVideos);
-    });
   }
-  // Tentar imediatamente ao carregar
+
+  // Tentar imediatamente
   document.addEventListener('DOMContentLoaded', function() {
+    playAll();
+    // Retry quando o conteúdo estiver pronto
     var hero = document.querySelector('.hero-video-wrap video');
     var dif = document.getElementById('dif-video');
-    playVideo(hero);
-    playVideo(dif);
-    // Também tenta quando o video estiver pronto
-    if (hero) hero.addEventListener('canplay', function() { playVideo(hero); });
-    if (dif) dif.addEventListener('canplay', function() { playVideo(dif); });
+    if (hero) hero.addEventListener('loadeddata', function() { playVideo(hero); });
+    if (dif) dif.addEventListener('loadeddata', function() { playVideo(dif); });
   });
-  // E também no primeiro toque (iOS/Android exigem gesto do usuário em alguns casos)
-  ['touchstart','touchend','click'].forEach(function(ev) {
-    document.addEventListener(ev, unlockVideos, { passive: true });
+
+  // Tentar em qualquer interação do usuário (necessário em alguns browsers mobile)
+  ['touchstart', 'touchend', 'click', 'scroll'].forEach(function(ev) {
+    document.addEventListener(ev, playAll, { passive: true, once: false });
+  });
+
+  // Visibilidade da página (volta do background no celular)
+  document.addEventListener('visibilitychange', function() {
+    if (!document.hidden) playAll();
   });
 })();
 </script>
