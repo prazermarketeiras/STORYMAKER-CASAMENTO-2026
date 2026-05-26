@@ -1570,13 +1570,8 @@ footer p { font-size: 0.78rem; color: #7A5C40; font-weight: 300; }
 // Autoplay robusto para mobile (iOS Safari, Android Chrome, WeChat)
 (function() {
   function playVideo(v) {
-    if (!v) return;
+    if (!v || !v.paused) return;
     v.muted = true;
-    v.playsInline = true;
-    v.setAttribute('playsinline', '');
-    v.setAttribute('webkit-playsinline', '');
-    v.setAttribute('x5-playsinline', '');
-    v.load();
     var p = v.play();
     if (p && p.catch) p.catch(function() {});
   }
@@ -1586,22 +1581,13 @@ footer p { font-size: 0.78rem; color: #7A5C40; font-weight: 300; }
     playVideo(document.getElementById('dif-video'));
   }
 
-  // Tentar imediatamente
-  document.addEventListener('DOMContentLoaded', function() {
-    playAll();
-    // Retry quando o conteúdo estiver pronto
-    var hero = document.querySelector('.hero-video-wrap video');
-    var dif = document.getElementById('dif-video');
-    if (hero) hero.addEventListener('loadeddata', function() { playVideo(hero); });
-    if (dif) dif.addEventListener('loadeddata', function() { playVideo(dif); });
+  document.addEventListener('DOMContentLoaded', playAll);
+
+  // Uma única tentativa na primeira interação, caso autoplay tenha sido bloqueado
+  ['touchstart', 'click'].forEach(function(ev) {
+    document.addEventListener(ev, playAll, { passive: true, once: true });
   });
 
-  // Tentar em qualquer interação do usuário (necessário em alguns browsers mobile)
-  ['touchstart', 'touchend', 'click', 'scroll'].forEach(function(ev) {
-    document.addEventListener(ev, playAll, { passive: true, once: false });
-  });
-
-  // Visibilidade da página (volta do background no celular)
   document.addEventListener('visibilitychange', function() {
     if (!document.hidden) playAll();
   });
