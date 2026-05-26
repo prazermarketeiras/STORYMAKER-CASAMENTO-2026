@@ -1503,25 +1503,7 @@ footer p { font-size: 0.78rem; color: #7A5C40; font-weight: 300; }
 
 
 <script>
-(function() {
-  document.addEventListener('DOMContentLoaded', function() {
-    var difVideo = document.getElementById('dif-video');
-    var heroVideo = document.querySelector('.hero-video-wrap video');
-    if (difVideo && heroVideo) {
-      var source = difVideo.querySelector('source');
-      if (source) {
-        var heroSource = document.createElement('source');
-        heroSource.src = source.src;
-        heroSource.type = source.type || 'video/mp4';
-        heroVideo.appendChild(heroSource);
-      }
-    }
-  });
-})();
-</script>
-
-<script>
-// IntersectionObserver para videos quando entrarem na tela
+// Pausa/retoma videos conforme entram e saem da tela (sem reiniciar)
 (function() {
   document.addEventListener('DOMContentLoaded', function() {
     function observeVideo(v) {
@@ -1529,12 +1511,7 @@ footer p { font-size: 0.78rem; color: #7A5C40; font-weight: 300; }
       var obs = new IntersectionObserver(function(entries) {
         entries.forEach(function(entry) {
           if (entry.isIntersecting) {
-            var vid = entry.target;
-            vid.muted = true;
-            if (vid.paused) {
-              vid.load();
-              vid.play().catch(function() {});
-            }
+            if (entry.target.paused) entry.target.play().catch(function() {});
           } else {
             entry.target.pause();
           }
