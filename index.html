@@ -1502,6 +1502,52 @@ footer p { font-size: 0.78rem; color: #7A5C40; font-weight: 300; }
 
 
 
+<script>
+(function() {
+  document.addEventListener('DOMContentLoaded', function() {
+    var difVideo = document.getElementById('dif-video');
+    var heroVideo = document.querySelector('.hero-video-wrap video');
+    if (difVideo && heroVideo) {
+      var source = difVideo.querySelector('source');
+      if (source) {
+        var heroSource = document.createElement('source');
+        heroSource.src = source.src;
+        heroSource.type = source.type || 'video/mp4';
+        heroVideo.appendChild(heroSource);
+      }
+    }
+  });
+})();
+</script>
+
+<script>
+// IntersectionObserver para videos quando entrarem na tela
+(function() {
+  document.addEventListener('DOMContentLoaded', function() {
+    function observeVideo(v) {
+      if (!v) return;
+      var obs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            var vid = entry.target;
+            vid.muted = true;
+            if (vid.paused) {
+              vid.load();
+              vid.play().catch(function() {});
+            }
+          } else {
+            entry.target.pause();
+          }
+        });
+      }, { threshold: 0.1 });
+      obs.observe(v);
+    }
+    observeVideo(document.getElementById('dif-video'));
+    observeVideo(document.querySelector('.hero-video-wrap video'));
+  });
+})();
+</script>
+
 <!-- Scroll Reveal -->
 <script>
 (function() {
@@ -1523,56 +1569,41 @@ footer p { font-size: 0.78rem; color: #7A5C40; font-weight: 300; }
 <script>
 // Autoplay robusto para mobile (iOS Safari, Android Chrome, WeChat)
 (function() {
-  function tryPlay(v) {
+  function playVideo(v) {
     if (!v) return;
     v.muted = true;
     v.playsInline = true;
     v.setAttribute('playsinline', '');
     v.setAttribute('webkit-playsinline', '');
-    if (v.paused) {
-      v.play().catch(function() {});
-    }
+    v.setAttribute('x5-playsinline', '');
+    v.load();
+    var p = v.play();
+    if (p && p.catch) p.catch(function() {});
   }
 
-  var hero = null;
-  var dif = null;
+  function playAll() {
+    playVideo(document.querySelector('.hero-video-wrap video'));
+    playVideo(document.getElementById('dif-video'));
+  }
 
+  // Tentar imediatamente
   document.addEventListener('DOMContentLoaded', function() {
-    hero = document.querySelector('.hero-video-wrap video');
-    dif = document.getElementById('dif-video');
-
-    // Tentar play direto (funciona em desktop e maioria dos mobiles)
-    tryPlay(hero);
-    tryPlay(dif);
-
-    // IntersectionObserver apenas para o dif-video (segunda seção)
-    if (dif && 'IntersectionObserver' in window) {
-      var obs = new IntersectionObserver(function(entries) {
-        entries.forEach(function(entry) {
-          if (entry.isIntersecting) {
-            tryPlay(entry.target);
-          } else {
-            entry.target.pause();
-          }
-        });
-      }, { threshold: 0.2 });
-      obs.observe(dif);
-    }
+    playAll();
+    // Retry quando o conteúdo estiver pronto
+    var hero = document.querySelector('.hero-video-wrap video');
+    var dif = document.getElementById('dif-video');
+    if (hero) hero.addEventListener('loadeddata', function() { playVideo(hero); });
+    if (dif) dif.addEventListener('loadeddata', function() { playVideo(dif); });
   });
 
-  // Fallback: primeiro toque do usuário desbloqueia autoplay no iOS
-  function onFirstTouch() {
-    tryPlay(hero);
-    tryPlay(dif);
-  }
-  document.addEventListener('touchstart', onFirstTouch, { passive: true, once: true });
-  document.addEventListener('click', onFirstTouch, { once: true });
+  // Tentar em qualquer interação do usuário (necessário em alguns browsers mobile)
+  ['touchstart', 'touchend', 'click', 'scroll'].forEach(function(ev) {
+    document.addEventListener(ev, playAll, { passive: true, once: false });
+  });
 
-  // Retoma quando volta do background
+  // Visibilidade da página (volta do background no celular)
   document.addEventListener('visibilitychange', function() {
-    if (!document.hidden) {
-      tryPlay(hero);
-    }
+    if (!document.hidden) playAll();
   });
 })();
 </script>
