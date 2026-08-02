@@ -114,6 +114,13 @@ nav {
   display: flex; align-items: center; gap: 10px;
 }
 .hero-pretitulo::before { content:''; display:inline-block; width:28px; height:1px; background:var(--dourado); }
+.hero-year-badge {
+  display: inline-flex; align-items: center; width: fit-content;
+  background: var(--dourado); color: var(--marrom-escuro);
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 8px 18px; border-radius: 50px; margin-bottom: 22px;
+  box-shadow: 0 4px 18px rgba(201,169,110,0.4);
+}
 .hero-titulo {
   font-family: 'Cormorant Garamond', serif;
   font-size: clamp(2.2rem, 3.8vw, 3.8rem);
@@ -531,6 +538,14 @@ nav {
 .pagamento-extra { border-left: 2px solid rgba(201,169,110,0.4); padding-left: 20px; }
 .pagamento-extra p { font-size: 0.84rem; font-weight: 300; color: #6B4F35; line-height: 1.7; margin-bottom: 8px; }
 .pagamento-extra strong { color: var(--marrom); }
+.pagamento-desconto {
+  display: flex; align-items: center; gap: 10px; margin-top: 12px;
+  background: var(--dourado); color: var(--marrom-escuro);
+  border-radius: 6px; padding: 12px 16px;
+  font-size: 0.86rem; font-weight: 600; line-height: 1.5;
+  box-shadow: 0 4px 14px rgba(201,169,110,0.35);
+}
+.pagamento-desconto span { font-size: 1.1rem; flex-shrink: 0; }
 
 .pacotes-duvida { text-align: center; margin-top: 32px; }
 .pacotes-duvida p { font-size: 0.88rem; color: #7A5C40; font-weight: 300; margin-bottom: 14px; }
@@ -542,6 +557,39 @@ nav {
   box-shadow: 0 4px 16px rgba(37,211,102,0.3);
 }
 .btn-duvida-wpp:hover { background: #1DB954; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(37,211,102,0.4); }
+
+/* ── FAQ ── */
+.faq { background: var(--off-white); padding: 100px 72px; position: relative; overflow: hidden; }
+.faq-header { text-align: center; margin-bottom: 56px; }
+.faq-header h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2rem, 3.5vw, 2.8rem); font-weight: 400; color: var(--marrom-escuro); margin-bottom: 16px;
+}
+.faq-header h2 em { font-style: italic; color: var(--marrom); }
+.faq-header p { font-size: 0.96rem; font-weight: 300; color: #6B4F35; max-width: 480px; margin: 0 auto; line-height: 1.7; }
+.faq-list { max-width: 780px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+.faq-item {
+  background: var(--off-white); border-radius: 8px; overflow: hidden;
+  border: 1px solid rgba(201,169,110,0.25);
+}
+.faq-item summary {
+  list-style: none; cursor: pointer; padding: 22px 28px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; font-weight: 500;
+  background: var(--marrom-escuro); color: var(--bege); transition: background 0.2s;
+}
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary:hover { background: #4A2F18; }
+.faq-item summary::after {
+  content: '+'; font-size: 1.5rem; font-weight: 300; color: var(--dourado);
+  flex-shrink: 0; transition: transform 0.25s; line-height: 1;
+}
+.faq-item[open] summary::after { transform: rotate(45deg); }
+.faq-answer { padding: 18px 28px 24px; background: var(--bege); }
+.faq-answer p { font-size: 0.9rem; font-weight: 300; line-height: 1.75; color: #6B4F35; }
+
+.faq-nota { text-align: center; margin-top: 32px; font-size: 0.9rem; color: #7A5C40; font-weight: 300; }
+.faq-nota a { color: var(--marrom); text-decoration: underline; text-underline-offset: 3px; }
 
 /* ── FEEDBACKS ── */
 .feedbacks { background: var(--bege); padding: 100px 72px; position: relative; overflow: hidden; }
@@ -665,6 +713,11 @@ footer p { font-size: 0.78rem; color: #7A5C40; font-weight: 300; }
   .pacote:last-child { border-radius: 0 0 4px 4px; }
   .pacotes-pagamento { grid-template-columns: 1fr; padding: 24px 20px; }
   .pagamento-extra { border-left: none; border-top: 1px solid rgba(201,169,110,0.3); padding-left: 0; padding-top: 16px; }
+
+  /* FAQ */
+  .faq { padding: 64px 28px; }
+  .faq-item summary { padding: 18px 22px; }
+  .faq-answer { padding: 4px 22px 20px; }
 
   /* Feedbacks */
   .feedbacks { padding: 64px 28px; }
@@ -810,6 +863,12 @@ footer p { font-size: 0.78rem; color: #7A5C40; font-weight: 300; }
   }
   .pacotes-pagamento { margin: 0 22px; }
   .pacotes-duvida { padding: 0 22px; }
+
+  /* FAQ */
+  .faq { padding: 56px 22px; }
+  .faq-header { margin-bottom: 40px; }
+  .faq-item summary { padding: 16px 18px; font-size: 0.98rem; }
+  .faq-answer { padding: 4px 18px 18px; }
 
   /* Feedbacks */
   .feedbacks { padding: 56px 22px; }
@@ -1019,6 +1078,7 @@ footer p { font-size: 0.78rem; color: #7A5C40; font-weight: 300; }
       <ellipse cx="105" cy="200" rx="28" ry="12" stroke="#C9A96E" stroke-width="0.4" fill="none"/>
       <ellipse cx="295" cy="200" rx="28" ry="12" stroke="#C9A96E" stroke-width="0.4" fill="none"/>
     </svg>
+    <span class="hero-year-badge">Storymaker Casamento 2026</span>
     <p class="hero-pretitulo">Prazer, Marketeiras · Casamentos</p>
     <h1 class="hero-titulo">
       O seu casamento<br>merece ser
@@ -1340,7 +1400,7 @@ footer p { font-size: 0.78rem; color: #7A5C40; font-weight: 300; }
       </ul>
       <div class="pacote-exemplo">
         <div class="pacote-exemplo-titulo">Ideal para cobrir</div>
-        <p>Cerimônia completa na igreja e início da recepção</p>
+        <p>Cerimônia completa e início da recepção</p>
       </div>
       <a href="https://wa.me/5531992907252?text=Ol%C3%A1!%20Vim%20pela%20p%C3%A1gina%20e%20tenho%20interesse%20no%20Storymaker%20para%20casamento%20%F0%9F%92%8D" target="_blank" class="btn-pacote">Quero o Básico</a>
     </div>
@@ -1360,7 +1420,7 @@ footer p { font-size: 0.78rem; color: #7A5C40; font-weight: 300; }
       </ul>
       <div class="pacote-exemplo">
         <div class="pacote-exemplo-titulo">Ideal para cobrir</div>
-        <p>Cerimônia completa na igreja e festa</p>
+        <p>Cerimônia completa e festa</p>
       </div>
       <a href="https://wa.me/5531992907252?text=Ol%C3%A1!%20Vim%20pela%20p%C3%A1gina%20e%20tenho%20interesse%20no%20Storymaker%20para%20casamento%20%F0%9F%92%8D" target="_blank" class="btn-pacote">Quero o Lembranças</a>
     </div>
@@ -1379,7 +1439,7 @@ footer p { font-size: 0.78rem; color: #7A5C40; font-weight: 300; }
       </ul>
       <div class="pacote-exemplo">
         <div class="pacote-exemplo-titulo">Ideal para cobrir</div>
-        <p>Making-off completo, cerimônia na igreja e festa</p>
+        <p>Making-off completo, cerimônia e festa</p>
       </div>
       <a href="https://wa.me/5531992907252?text=Ol%C3%A1!%20Vim%20pela%20p%C3%A1gina%20e%20tenho%20interesse%20no%20Storymaker%20para%20casamento%20%F0%9F%92%8D" target="_blank" class="btn-pacote">Quero a História Completa</a>
     </div>
@@ -1402,7 +1462,22 @@ footer p { font-size: 0.78rem; color: #7A5C40; font-weight: 300; }
     <div class="pagamento-extra">
       <p>Precisa de mais tempo? <strong>Hora extra: R$ 500/hora</strong>.</p>
       <p>Aceitamos Pix e transferência bancária.</p>
+      <div class="pagamento-desconto"><span>✦</span> Pagamento integral à vista em dinheiro? Ganhe 5% de desconto em qualquer um dos pacotes!</div>
     </div>
+  </div>
+  <div class="pacotes-avulso" style="max-width:1100px;margin:20px auto 0;background:var(--bege);border:1px solid rgba(201,169,110,0.3);border-radius:4px;padding:28px 36px;text-align:center;">
+    <p style="font-family:'Cormorant Garamond', serif;font-size:1.1rem;font-weight:500;color:var(--marrom-escuro);margin-bottom:10px;">Já tem um videomaker contratado?</p>
+    <p style="font-size:0.88rem;font-weight:300;color:#6B4F35;line-height:1.7;max-width:640px;margin:0 auto 16px;">Se você não precisa do aftermovie editado, também oferecemos o <strong>Storymaker avulso</strong> — só a cobertura ao vivo, sem vídeo final. Ideal para quem já contratou outro profissional para o vídeo e quer apenas os stories em tempo real.</p>
+    <ul style="list-style:none;display:inline-flex;flex-direction:column;gap:6px;text-align:left;margin:0 auto 20px;font-size:0.84rem;font-weight:300;color:#6B4F35;line-height:1.5;">
+      <li>✦&nbsp; Stories ilimitados em tempo real, publicados no seu Instagram</li>
+      <li>✦&nbsp; Duração e valor definidos sob medida, conforme o seu evento</li>
+      <li>✦&nbsp; Sem aftermovie editado</li>
+    </ul>
+    <p style="font-size:0.88rem;font-weight:300;color:#6B4F35;line-height:1.7;max-width:640px;margin:0 auto 18px;">Fale com a gente pelo WhatsApp e montamos um orçamento sob medida.</p>
+    <a href="https://wa.me/5531992907252?text=Ol%C3%A1!%20Tenho%20interesse%20no%20Storymaker%20avulso%2C%20sem%20aftermovie%20%F0%9F%92%8D" target="_blank" class="btn-duvida-wpp">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Falar sobre o Storymaker avulso
+    </a>
   </div>
   <div class="pacotes-duvida">
     <p>Ficou com dúvida sobre qual pacote faz mais sentido para o seu casamento?</p>
@@ -1411,6 +1486,66 @@ footer p { font-size: 0.78rem; color: #7A5C40; font-weight: 300; }
       Falar com a gente pelo WhatsApp
     </a>
   </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq">
+  <div class="faq-header reveal">
+    <p class="section-label" style="justify-content:center;">Perguntas frequentes</p>
+    <h2>Ficou com alguma <em>dúvida?</em></h2>
+    <p>Separamos as perguntas que mais recebemos sobre o Storymaker para casamentos.</p>
+  </div>
+  <div class="faq-list">
+    <details class="faq-item reveal">
+      <summary>O que é o Storymaker, exatamente?</summary>
+      <div class="faq-answer"><p>É uma profissional dedicada a registrar e publicar em tempo real, nos seus stories do Instagram, os momentos mais espontâneos do seu casamento — diferente do fotógrafo (que foca nas poses) e do cinegrafista (que entrega só o vídeo oficial depois).</p></div>
+    </details>
+    <details class="faq-item reveal">
+      <summary>Quantas storymakers vão estar no meu casamento?</summary>
+      <div class="faq-answer"><p>Duas storymakers presentes simultaneamente em todos os pacotes, cobrindo ângulos diferentes do mesmo momento — dos preparativos à festa.</p></div>
+    </details>
+    <details class="faq-item reveal">
+      <summary>Os stories são publicados no meu Instagram ou no de vocês?</summary>
+      <div class="faq-answer"><p>No Instagram que vocês preferirem — pode ser o seu, o do seu par ou de outra pessoa. Se for necessário, também podemos marcar outros perfis nos stories.</p></div>
+    </details>
+    <details class="faq-item reveal">
+      <summary>O que é aftermovie?</summary>
+      <div class="faq-answer"><p>É um vídeo editado com os melhores momentos do seu casamento — geralmente de até 3 minutos — pronto para compartilhar no grupo da família, postar no feed do Instagram ou guardar como lembrança para sempre.</p></div>
+    </details>
+    <details class="faq-item reveal">
+      <summary>Quanto tempo demora para receber o aftermovie?</summary>
+      <div class="faq-answer"><p>Varia por pacote: até 5 dias úteis no Básico, até 3 dias no Lembranças e até 2 dias na História Completa.</p></div>
+    </details>
+    <details class="faq-item reveal">
+      <summary>Recebo o material bruto (vídeos sem edição)?</summary>
+      <div class="faq-answer"><p>Sim, nos pacotes Lembranças e História Completa você recebe todos os clipes via Drive. O Básico inclui só o aftermovie editado.</p></div>
+    </details>
+    <details class="faq-item reveal">
+      <summary>Posso contratar só o Storymaker, sem aftermovie editado?</summary>
+      <div class="faq-answer"><p>Sim! O Storymaker avulso é indicado principalmente para quem já tem um videomaker contratado para o casamento. Vale lembrar que Storymaker e videomaker têm olhares e narrativas completamente diferentes — por isso vale a pena ter as duas visões do seu grande dia. Mas, se preferir, também é possível contratar só o Storymaker.</p></div>
+    </details>
+    <details class="faq-item reveal">
+      <summary>Quero o Storymaker, mas não quero postar em tempo real. É possível?</summary>
+      <div class="faq-answer"><p>Sim! Podemos fazer a cobertura normalmente e salvar tudo em um Drive — assim vocês revêem com calma depois e postam só o que quiserem.</p></div>
+    </details>
+    <details class="faq-item reveal">
+      <summary>O que acontece se o casamento passar do horário contratado?</summary>
+      <div class="faq-answer"><p>A gente conversa com vocês durante o evento e avisa que o tempo contratado acabou. Se for necessário, pode ser acordada a continuidade com hora extra (R$ 500/hora).</p></div>
+    </details>
+    <details class="faq-item reveal">
+      <summary>Quais as formas de pagamento?</summary>
+      <div class="faq-answer"><p>Pix ou transferência bancária, com 50% na assinatura do contrato e 50% uma semana antes do casamento. Pagamento integral à vista em dinheiro tem 5% de desconto em qualquer um dos pacotes.</p></div>
+    </details>
+    <details class="faq-item reveal">
+      <summary>Como faço para reservar minha data?</summary>
+      <div class="faq-answer"><p>É só entrar em contato com a gente pelo WhatsApp.</p></div>
+    </details>
+    <details class="faq-item reveal">
+      <summary>Vocês atendem fora de Sete Lagoas?</summary>
+      <div class="faq-answer"><p>Sim! Nesses casos, cobramos uma taxa de deslocamento que varia de acordo com o local do casamento.</p></div>
+    </details>
+  </div>
+  <p class="faq-nota reveal">Ficou com outra pergunta? <a href="https://wa.me/5531992907252?text=Ol%C3%A1!%20Tenho%20uma%20d%C3%BAvida%20sobre%20o%20Storymaker%20para%20casamento%20%F0%9F%92%8D" target="_blank">Entre em contato com a gente</a> — ficaremos felizes em responder.</p>
 </section>
 
 <!-- FEEDBACKS -->
